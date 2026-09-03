@@ -6,6 +6,8 @@ Program ID：`BsyakUNhxHsL1UdEbaUSHTRaLZ6fw2huHW34wHe7ut8c`，网络：Solana de
 
 所有整数均为 little-endian。Pool PDA seeds 为 `["pool", owner_pubkey]`。Pool 数据固定 164 bytes：`discriminator:u8=1 | bump:u8 | fee_bps:u16 | owner:pubkey | mint_a:pubkey | mint_b:pubkey | vault_a:pubkey | vault_b:pubkey`。
 
+`mint_a` 与 `mint_b` 是 Pool 的持久化 Token 标识。客户端通过 `getProgramAccounts` 且 `dataSize=164` 枚举 Pool，仍必须校验账户 owner、discriminator 和数据长度后才能解析。查询不是新的链上指令。
+
 ## 指令 0：InitializePool
 
 数据：`tag:u8=0 | fee_bps:u16`。手续费范围 `0..=1000`。

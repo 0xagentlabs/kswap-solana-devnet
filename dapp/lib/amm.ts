@@ -1,0 +1,9 @@
+import {AccountMeta,PublicKey,SystemProgram,SYSVAR_RENT_PUBKEY,TransactionInstruction} from "@solana/web3.js";
+export const PROGRAM_ID=new PublicKey("BsyakUNhxHsL1UdEbaUSHTRaLZ6fw2huHW34wHe7ut8c");
+export const TOKEN_PROGRAM_ID=new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
+export const poolPda=(owner:PublicKey)=>PublicKey.findProgramAddressSync([Buffer.from("pool"),owner.toBuffer()],PROGRAM_ID)[0];
+const u64=(v:bigint)=>{const b=Buffer.alloc(8);b.writeBigUInt64LE(v);return b};
+const ix=(keys:AccountMeta[],data:Buffer)=>new TransactionInstruction({programId:PROGRAM_ID,keys,data});
+export function initializeIx(owner:PublicKey,vaultA:PublicKey,vaultB:PublicKey,feeBps:number){const b=Buffer.alloc(3);b[0]=0;b.writeUInt16LE(feeBps,1);return ix([{pubkey:owner,isSigner:true,isWritable:true},{pubkey:poolPda(owner),isSigner:false,isWritable:true},{pubkey:vaultA,isSigner:false,isWritable:false},{pubkey:vaultB,isSigner:false,isWritable:false},{pubkey:SystemProgram.programId,isSigner:false,isWritable:false},{pubkey:SYSVAR_RENT_PUBKEY,isSigner:false,isWritable:false}],b)}
+export function swapIx(user:PublicKey,pool:PublicKey,userSource:PublicKey,userDest:PublicKey,vaultSource:PublicKey,vaultDest:PublicKey,amountIn:bigint,minOut:bigint){return ix([{pubkey:user,isSigner:true,isWritable:true},{pubkey:pool,isSigner:false,isWritable:false},{pubkey:userSource,isSigner:false,isWritable:true},{pubkey:userDest,isSigner:false,isWritable:true},{pubkey:vaultSource,isSigner:false,isWritable:true},{pubkey:vaultDest,isSigner:false,isWritable:true},{pubkey:TOKEN_PROGRAM_ID,isSigner:false,isWritable:false}],Buffer.concat([Buffer.from([1]),u64(amountIn),u64(minOut)]))}
+export function quote(amount:bigint,reserveIn:bigint,reserveOut:bigint,feeBps:number){const e=amount*BigInt(10000-feeBps);return reserveOut*e/(reserveIn*10000n+e)}

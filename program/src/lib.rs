@@ -115,9 +115,9 @@ fn add_liquidity(a: &[AccountInfo], d: &[u8]) -> ProgramResult {
     if shares == 0 || shares < min_lp || amount_a > max_a || amount_b > max_b {
         return Err(SwapError::Slippage.into());
     }
-    let user_a = TokenAccount::from_account_info(ua)?;
-    let user_b = TokenAccount::from_account_info(ub)?;
-    if user_a.amount() < amount_a || user_b.amount() < amount_b {
+    let user_a_amount = TokenAccount::from_account_info(ua)?.amount();
+    let user_b_amount = TokenAccount::from_account_info(ub)?.amount();
+    if user_a_amount < amount_a || user_b_amount < amount_b {
         return Err(SwapError::InvalidAmount.into());
     }
     Transfer {
@@ -134,9 +134,10 @@ fn add_liquidity(a: &[AccountInfo], d: &[u8]) -> ProgramResult {
         amount: amount_b,
     }
     .invoke()?;
-    let pd = pool.try_borrow_data()?;
-    let bump = [pd[1]];
-    let owner: [u8; 32] = pd[4..36].try_into().unwrap();
+    let (bump, owner) = {
+        let pd = pool.try_borrow_data()?;
+        ([pd[1]], <[u8; 32]>::try_from(&pd[4..36]).unwrap())
+    };
     let seeds = [
         Seed::from(b"pool"),
         Seed::from(owner.as_ref()),
@@ -192,11 +193,13 @@ fn remove_liquidity(a: &[AccountInfo], d: &[u8]) -> ProgramResult {
         amount: lp_amount,
     }
     .invoke()?;
-    let pd = pool.try_borrow_data()?;
-    let bump_bytes = [pd[1]];
+    let (bump_bytes, owner) = {
+        let pd = pool.try_borrow_data()?;
+        ([pd[1]], <[u8; 32]>::try_from(&pd[4..36]).unwrap())
+    };
     let seeds = [
         Seed::from(b"pool"),
-        Seed::from(&pd[4..36]),
+        Seed::from(owner.as_ref()),
         Seed::from(&bump_bytes),
     ];
     let signer = Signer::from(&seeds);
@@ -335,51 +338,61 @@ fn migrate_liquidity(a: &[AccountInfo], d: &[u8]) -> ProgramResult {
 }
 
 fn seed_initial_liquidity(a: &[AccountInfo], d: &[u8]) -> ProgramResult {
-    if a.len() != 6 || !d.is_empty() {
+    if a.len() != 7 || !d.is_empty() {
         return Err(SwapError::InvalidAccounts.into());
     }
-    let (owner, pool, va, vb, lp_mint, owner_lp) = (&a[0], &a[1], &a[2], &a[3], &a[4], &a[5]);
-    if !owner.is_signer() || pool.owner() != &ID {
+    let (owner, pool, va, vb, lp_mint, owner_lp, tp) =
+        (&a[0], &a[1], &a[2], &a[3], &a[4], &a[5], &a[6]);
+    if !owner.is_signer() || pool.owner() != &ID || tp.key() != &pinocchio_token::ID {
         return Err(SwapError::InvalidAccounts.into());
     }
-    let pd = pool.try_borrow_data()?;
-    if pd.len() != POOL_LEN
-        || pd[0] != DISC
-        || owner.key() != <&[u8; 32]>::try_from(&pd[4..36]).unwrap()
-        || va.key() != <&[u8; 32]>::try_from(&pd[100..132]).unwrap()
-        || vb.key() != <&[u8; 32]>::try_from(&pd[132..164]).unwrap()
-    {
-        return Err(SwapError::Unauthorized.into());
-    }
+    let (pool_bump, pool_owner) = {
+        let pd = pool.try_borrow_data()?;
+        if pd.len() != POOL_LEN
+            || pd[0] != DISC
+            || owner.key() != <&[u8; 32]>::try_from(&pd[4..36]).unwrap()
+            || va.key() != <&[u8; 32]>::try_from(&pd[100..132]).unwrap()
+            || vb.key() != <&[u8; 32]>::try_from(&pd[132..164]).unwrap()
+        {
+            return Err(SwapError::Unauthorized.into());
+        }
+        ([pd[1]], <[u8; 32]>::try_from(&pd[4..36]).unwrap())
+    };
     let (expected, _) = find_program_address(&[b"lp_mint", pool.key().as_ref()], &ID);
-    let mint = Mint::from_account_info(lp_mint)?;
-    if lp_mint.key() != &expected || mint.supply() != 0 || mint.mint_authority() != Some(pool.key())
     {
-        return Err(SwapError::InvalidState.into());
+        let mint = Mint::from_account_info(lp_mint)?;
+        if lp_mint.key() != &expected
+            || mint.supply() != 0
+            || mint.mint_authority() != Some(pool.key())
+        {
+            return Err(SwapError::InvalidState.into());
+        }
     }
-    let vault_a = TokenAccount::from_account_info(va)?;
-    let vault_b = TokenAccount::from_account_info(vb)?;
-    let destination = TokenAccount::from_account_info(owner_lp)?;
-    if vault_a.owner() != pool.key()
-        || vault_b.owner() != pool.key()
-        || destination.owner() != owner.key()
-        || destination.mint() != lp_mint.key()
-    {
-        return Err(SwapError::InvalidMint.into());
-    }
+    let (reserve_a, reserve_b) = {
+        let vault_a = TokenAccount::from_account_info(va)?;
+        let vault_b = TokenAccount::from_account_info(vb)?;
+        let destination = TokenAccount::from_account_info(owner_lp)?;
+        if vault_a.owner() != pool.key()
+            || vault_b.owner() != pool.key()
+            || destination.owner() != owner.key()
+            || destination.mint() != lp_mint.key()
+        {
+            return Err(SwapError::InvalidMint.into());
+        }
+        (vault_a.amount(), vault_b.amount())
+    };
     let shares = integer_sqrt(
-        (vault_a.amount() as u128)
-            .checked_mul(vault_b.amount() as u128)
+        (reserve_a as u128)
+            .checked_mul(reserve_b as u128)
             .ok_or(SwapError::MathOverflow)?,
     );
     let shares = u64::try_from(shares).map_err(|_| SwapError::MathOverflow)?;
     if shares == 0 {
         return Err(SwapError::InvalidAmount.into());
     }
-    let pool_bump = [pd[1]];
     let pool_seeds = [
         Seed::from(b"pool"),
-        Seed::from(&pd[4..36]),
+        Seed::from(pool_owner.as_ref()),
         Seed::from(&pool_bump),
     ];
     MintTo {
@@ -500,27 +513,35 @@ fn swap(a: &[AccountInfo], d: &[u8]) -> ProgramResult {
     {
         return Err(SwapError::InvalidAccounts.into());
     }
-    let pd = pool.try_borrow_data()?;
-    if pd.len() != POOL_LEN || pd[0] != DISC {
-        return Err(SwapError::InvalidState.into());
-    }
-    let fee = u16::from_le_bytes([pd[2], pd[3]]) as u128;
-    let src = TokenAccount::from_account_info(us)?;
-    let dst = TokenAccount::from_account_info(ud)?;
-    let vsrc = TokenAccount::from_account_info(vs)?;
-    let vdst = TokenAccount::from_account_info(vd)?;
-    let forward = vs.key() == <&[u8; 32]>::try_from(&pd[100..132]).unwrap()
-        && vd.key() == <&[u8; 32]>::try_from(&pd[132..164]).unwrap();
-    let reverse = vs.key() == <&[u8; 32]>::try_from(&pd[132..164]).unwrap()
-        && vd.key() == <&[u8; 32]>::try_from(&pd[100..132]).unwrap();
-    if (!forward && !reverse)
-        || src.mint() != vsrc.mint()
-        || dst.mint() != vdst.mint()
-        || vsrc.owner() != pool.key()
-        || vdst.owner() != pool.key()
-    {
-        return Err(SwapError::InvalidMint.into());
-    }
+    let (fee, bump_bytes, pool_owner) = {
+        let pd = pool.try_borrow_data()?;
+        if pd.len() != POOL_LEN || pd[0] != DISC {
+            return Err(SwapError::InvalidState.into());
+        }
+        let fee = u16::from_le_bytes([pd[2], pd[3]]) as u128;
+        let forward = vs.key() == <&[u8; 32]>::try_from(&pd[100..132]).unwrap()
+            && vd.key() == <&[u8; 32]>::try_from(&pd[132..164]).unwrap();
+        let reverse = vs.key() == <&[u8; 32]>::try_from(&pd[132..164]).unwrap()
+            && vd.key() == <&[u8; 32]>::try_from(&pd[100..132]).unwrap();
+        if !forward && !reverse {
+            return Err(SwapError::InvalidMint.into());
+        }
+        (fee, [pd[1]], <[u8; 32]>::try_from(&pd[4..36]).unwrap())
+    };
+    let (reserve_source, reserve_destination) = {
+        let src = TokenAccount::from_account_info(us)?;
+        let dst = TokenAccount::from_account_info(ud)?;
+        let vsrc = TokenAccount::from_account_info(vs)?;
+        let vdst = TokenAccount::from_account_info(vd)?;
+        if src.mint() != vsrc.mint()
+            || dst.mint() != vdst.mint()
+            || vsrc.owner() != pool.key()
+            || vdst.owner() != pool.key()
+        {
+            return Err(SwapError::InvalidMint.into());
+        }
+        (vsrc.amount(), vdst.amount())
+    };
     let amount = u64::from_le_bytes(d[0..8].try_into().unwrap());
     let min = u64::from_le_bytes(d[8..16].try_into().unwrap());
     if amount == 0 {
@@ -529,15 +550,15 @@ fn swap(a: &[AccountInfo], d: &[u8]) -> ProgramResult {
     let effective = (amount as u128)
         .checked_mul(10_000 - fee)
         .ok_or(SwapError::MathOverflow)?;
-    let num = (vdst.amount() as u128)
+    let num = (reserve_destination as u128)
         .checked_mul(effective)
         .ok_or(SwapError::MathOverflow)?;
-    let den = (vsrc.amount() as u128)
+    let den = (reserve_source as u128)
         .checked_mul(10_000)
         .and_then(|x| x.checked_add(effective))
         .ok_or(SwapError::MathOverflow)?;
     let out = u64::try_from(num / den).map_err(|_| SwapError::MathOverflow)?;
-    if out == 0 || out < min || out >= vdst.amount() {
+    if out == 0 || out < min || out >= reserve_destination {
         return Err(SwapError::Slippage.into());
     }
     Transfer {
@@ -547,11 +568,9 @@ fn swap(a: &[AccountInfo], d: &[u8]) -> ProgramResult {
         amount,
     }
     .invoke()?;
-    let bump_bytes = [pd[1]];
-    let owner: [u8; 32] = pd[4..36].try_into().unwrap();
     let seeds = [
         Seed::from(b"pool"),
-        Seed::from(owner.as_ref()),
+        Seed::from(pool_owner.as_ref()),
         Seed::from(&bump_bytes),
     ];
     Transfer {

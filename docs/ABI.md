@@ -34,7 +34,7 @@ Program ID：`BsyakUNhxHsL1UdEbaUSHTRaLZ6fw2huHW34wHe7ut8c`，网络：Solana de
 
 ## 指令 4/5：MigrateLegacyPool / SeedInitialLiquidity
 
-旧 Pool 首次迁移由原 owner 在一个原子交易中依次调用：tag 4 创建 PDA `lp_mint=["lp_mint", pool]`（9 decimals、mint authority 为 Pool PDA），客户端创建 owner LP ATA，再由 tag 5 按 `floor(sqrt(reserve_a×reserve_b))` 向 owner 铸造初始 LP 份额。LP mint 已存在或 supply 非零时重复迁移失败。新建 Pool 的客户端在创建交易内直接完成相同步骤。
+旧 Pool 首次迁移由原 owner 在一个原子交易中依次调用：tag 4 创建 PDA `lp_mint=["lp_mint", pool]`（9 decimals、mint authority 为 Pool PDA），客户端创建 owner LP ATA，再由 tag 5 按 `floor(sqrt(reserve_a×reserve_b))` 向 owner 铸造初始 LP 份额。tag 5 账户顺序为 owner、pool、vault A、vault B、LP mint、owner LP ATA、Token Program。LP mint 已存在或 supply 非零时重复迁移失败。新建 Pool 的客户端在创建交易内直接完成相同步骤。
 
 ## 错误码
 

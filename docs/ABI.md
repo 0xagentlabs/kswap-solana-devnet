@@ -2,6 +2,8 @@
 
 Program ID：`BsyakUNhxHsL1UdEbaUSHTRaLZ6fw2huHW34wHe7ut8c`，网络：Solana devnet。
 
+本文只描述 K-Swap Program 的自定义二进制接口。Playground 的“创建 SPL Token”和“Mint Token”工具直接调用 Solana System Program、Associated Token Account Program 与经典 SPL Token Program，不会向 K-Swap Program 发送自定义指令，因此没有额外 discriminator，也不属于下述 ABI。
+
 所有整数均为 little-endian。Pool PDA seeds 为 `["pool", owner_pubkey]`。Pool 数据固定 164 bytes：`discriminator:u8=1 | bump:u8 | fee_bps:u16 | owner:pubkey | mint_a:pubkey | mint_b:pubkey | vault_a:pubkey | vault_b:pubkey`。
 
 ## 指令 0：InitializePool
@@ -19,4 +21,3 @@ Program ID：`BsyakUNhxHsL1UdEbaUSHTRaLZ6fw2huHW34wHe7ut8c`，网络：Solana de
 ## 错误码
 
 `1 InvalidAccounts`、`2 InvalidPda`、`3 InvalidState`、`4 InvalidMint`、`5 InvalidAmount`、`6 Slippage`、`7 MathOverflow`、`8 Unauthorized`、`9 InvalidFee`。
-

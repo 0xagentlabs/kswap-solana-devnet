@@ -9,7 +9,7 @@ K-Swap 是部署在 Solana devnet 的恒定乘积（`x · y = k`）SPL Token AMM
 - 创建 AMM Pool PDA，并配置池级手续费（0–1000 bps）。
 - 为两种经典 SPL Token 注入初始流动性。
 - 按实时储备报价并执行带滑点保护的 A→B / B→A swap。
-- 创建经典 SPL Token mint，可配置 0–9 位小数。
+- 创建经典 SPL Token mint，可配置名称、Symbol、Metadata URI 和 0–9 位小数。
 - 向连接钱包的关联代币账户（ATA）增发测试 Token；ATA 不存在时自动创建。
 - 所有页面交易在请求钱包签名前先进行 RPC 模拟，确认后提供 devnet Explorer 链接。
 
@@ -48,7 +48,7 @@ npm run dev
 ## 创建并增发测试 Token
 
 1. 在页面选择“测试 Token”→“创建 SPL Token”。
-2. 输入小数位（0–9），点击“创建测试 Token”并签名；连接的钱包成为 mint authority 和 freeze authority。
+2. 输入 Token Name、Symbol、可选的 Metadata URI 与小数位（0–9），点击“创建测试 Token”并签名；连接的钱包成为 mint authority、freeze authority 和 metadata update authority。
 3. 保存页面显示的 mint 地址，再选择“Mint Token”。
 4. 填入 mint 地址和增发数量。数量使用最小单位，例如 9 位小数 Token 的 `1_000_000_000` 最小单位等于 1 个展示单位。
 5. 点击“增发到当前钱包”并签名。页面会自动创建当前钱包 ATA（如需要）并增发 Token。

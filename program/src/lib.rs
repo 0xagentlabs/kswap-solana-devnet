@@ -1,6 +1,7 @@
 #![no_std]
 #![allow(unexpected_cfgs)]
 
+use pinocchio::sysvars::rent::Rent;
 use pinocchio::{
     account_info::AccountInfo,
     entrypoint,
@@ -210,13 +211,7 @@ fn swap(a: &[AccountInfo], d: &[u8]) -> ProgramResult {
 }
 
 fn rent_lamports(rent: &AccountInfo, len: usize) -> Result<u64, ProgramError> {
-    let d = rent.try_borrow_data()?;
-    if d.len() < 17 {
-        return Err(ProgramError::InvalidAccountData);
-    }
-    let lamports_per_byte_year = u64::from_le_bytes(d[0..8].try_into().unwrap());
-    let threshold = f64::from_le_bytes(d[8..16].try_into().unwrap());
-    Ok(((lamports_per_byte_year as f64) * (len as f64 + 128.0) * threshold) as u64)
+    Ok(Rent::from_account_info(rent)?.minimum_balance(len))
 }
 
 #[cfg(test)]

@@ -27,7 +27,7 @@ import {
   RefreshCw,
   ShieldCheck,
 } from "lucide-react";
-import { initializeIx, poolPda, quote, swapIx } from "@/lib/amm";
+import { createLpMintIx, initializeIx, lpMintPda, poolPda, quote, seedInitialLiquidityIx, swapIx } from "@/lib/amm";
 import {
   createMetadataInstruction,
   validateTokenMetadata,
@@ -125,6 +125,8 @@ export default function Home() {
           createTransferInstruction(ua, va, wallet.publicKey, BigInt(amount)),
           createTransferInstruction(ub, vb, wallet.publicKey, BigInt(second)),
         );
+        const state={address:p,bump:0,feeBps:Number(fee),owner:wallet.publicKey,mintA:a,mintB:b,vaultA:va,vaultB:vb},lpMint=lpMintPda(p),userLp=getAssociatedTokenAddressSync(lpMint,wallet.publicKey);
+        tx.add(createLpMintIx(wallet.publicKey,state),createAssociatedTokenAccountInstruction(wallet.publicKey,userLp,wallet.publicKey,lpMint),seedInitialLiquidityIx(wallet.publicKey,state,userLp));
       } else {
         const ra = (await getAccount(connection, va)).amount,
           rb = (await getAccount(connection, vb)).amount,

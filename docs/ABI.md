@@ -22,15 +22,19 @@ Program ID：`BsyakUNhxHsL1UdEbaUSHTRaLZ6fw2huHW34wHe7ut8c`，网络：Solana de
 
 ## 指令 2：AddLiquidity
 
-数据：`tag:u8=2 | amount_a:u64 | amount_b:u64`。两个数量均须大于零。
+数据：`tag:u8=2 | maximum_amount_a:u64 | maximum_amount_b:u64 | minimum_lp_out:u64`。两个最大输入量均须大于零。
 
-账户依次为：owner（signer）、pool、owner Token A（writable）、owner Token B（writable）、vault A（writable）、vault B（writable）、SPL Token Program。调用者必须等于 Pool 持久化 owner；用户 Token 账户的 authority 必须为 owner，mint 和 vault 必须与 Pool 完全匹配。两侧资产通过 CPI 成对转入 vault。
+账户依次为：provider（signer）、pool、provider Token A（writable）、provider Token B（writable）、vault A（writable）、vault B（writable）、LP mint PDA（writable）、provider LP Token account（writable）、SPL Token Program。任何钱包均可调用；程序按当前储备比例取不超过 maximum 的两侧资产，并铸造 `min(maxA×supply/reserveA, maxB×supply/reserveB)` 份 LP Token。
 
 ## 指令 3：RemoveLiquidity
 
-数据：`tag:u8=3 | amount_a:u64 | amount_b:u64`。两个数量均须大于零，且不得超过对应 vault 余额。
+数据：`tag:u8=3 | lp_amount:u64 | minimum_amount_a:u64 | minimum_amount_b:u64`。
 
-账户顺序与 AddLiquidity 相同。调用者必须为 Pool owner；Program 使用 Pool PDA seeds 签署两次 SPL Token Transfer，将指定数量成对转回 owner 的 Token 账户。当前版本没有 LP Token，因此不允许其他钱包增减流动性。
+账户顺序与 AddLiquidity 相同。任何 LP 持有者均可调用；程序销毁调用者的 LP Token，并按 `reserve × lp_amount / total_supply` 将两侧资产转回调用者，两个 minimum 字段提供滑点保护。
+
+## 指令 4/5：MigrateLegacyPool / SeedInitialLiquidity
+
+旧 Pool 首次迁移由原 owner 在一个原子交易中依次调用：tag 4 创建 PDA `lp_mint=["lp_mint", pool]`（9 decimals、mint authority 为 Pool PDA），客户端创建 owner LP ATA，再由 tag 5 按 `floor(sqrt(reserve_a×reserve_b))` 向 owner 铸造初始 LP 份额。LP mint 已存在或 supply 非零时重复迁移失败。新建 Pool 的客户端在创建交易内直接完成相同步骤。
 
 ## 错误码
 

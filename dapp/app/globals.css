@@ -1,2 +1,680 @@
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Fira+Sans:wght@400;500;600;700&display=swap');
-:root{--bg:#0f172a;--card:#1b2336;--muted:#a9b7ca;--line:#475569;--accent:#22c55e;--text:#f8fafc;--danger:#fca5a5}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 20% 15%,#153b3a 0,transparent 32%),radial-gradient(circle at 85% 85%,#273257 0,transparent 30%),var(--bg);color:var(--text);font:16px/1.5 "Fira Sans",sans-serif;min-height:100vh}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid white;outline-offset:3px}main{max-width:1200px;margin:auto;min-height:100vh;padding:0 32px}header{height:88px;display:flex;align-items:center;gap:20px;border-bottom:1px solid #ffffff20}.brand{color:white;text-decoration:none;font:700 20px "Fira Code";letter-spacing:.05em;margin-right:auto}.brand span{display:inline-grid;place-items:center;background:var(--accent);color:#0f172a;width:36px;height:36px;border-radius:10px;margin-right:8px}.header-link{color:#dbe4ef;text-decoration:none;min-height:44px;display:grid;place-items:center;padding:0 10px}.network{font:500 12px "Fira Code";letter-spacing:.12em;color:#cbd5e1}.network i{display:inline-block;width:8px;height:8px;background:var(--accent);border-radius:50%;margin-right:8px}.hero{display:grid;grid-template-columns:1fr 480px;align-items:center;gap:72px;padding:72px 0}.eyebrow{color:#86efac;font:600 13px "Fira Code";letter-spacing:.14em}h1{font-size:clamp(48px,7vw,82px);line-height:1.03;letter-spacing:-.045em;margin:16px 0 24px}h1 em{font-style:normal;color:var(--accent)}.lead{max-width:600px;color:#cbd5e1;font-size:19px}.trust{display:flex;gap:24px;flex-wrap:wrap;margin-top:40px;color:#dbe4ef;font-size:14px}.trust span{display:flex;align-items:center;gap:8px}.trust svg{width:18px;color:var(--accent)}.trade-card{background:#1b2336e8;border:1px solid #64748b88;box-shadow:0 28px 80px #0008;backdrop-filter:blur(18px);border-radius:24px;padding:24px}.trade-card nav{display:grid;grid-template-columns:repeat(3,1fr);background:#0f172a;border-radius:12px;padding:4px;margin-bottom:24px}.trade-card nav button,.sub-tabs button{min-height:44px;border:0;background:transparent;color:#94a3b8;border-radius:9px;font-weight:600}.trade-card nav button.active,.sub-tabs button.active{background:#334155;color:white}.sub-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}.sub-tabs button{border:1px solid var(--line);padding:0 10px}.sub-tabs button.active{border-color:#86efac}label{display:block;color:#cbd5e1;font-size:13px;margin:14px 0 6px}input{display:block;width:100%;margin-top:7px;height:52px;border:1px solid var(--line);border-radius:12px;background:#0f172a;color:white;padding:0 14px;font-family:"Fira Code";font-size:14px}.helper{color:var(--muted);font-size:13px;margin:8px 2px 20px}.flip,.icon-button{display:grid;place-items:center;width:44px;height:44px;border:1px solid var(--line);border-radius:50%;background:#29354b;color:white}.flip{margin:12px auto -8px}.flip:disabled,.icon-button:disabled{opacity:.35;cursor:not-allowed}.flip svg,.icon-button svg{width:19px}.details{display:flex;justify-content:space-between;gap:16px;border-top:1px solid #ffffff20;margin-top:20px;padding:18px 2px;color:var(--muted);font-size:13px}.details code{color:#dbeafe}.mint-result{border-top:1px solid #ffffff20;margin-top:20px;padding:18px 2px;color:var(--muted);font-size:13px}.mint-result span{display:block;margin-bottom:6px}.mint-result a{display:flex;align-items:center;gap:6px;color:#bbf7d0;font-family:"Fira Code";overflow-wrap:anywhere}.mint-result svg{width:16px;min-width:16px}.submit{width:100%;min-height:52px;border:0;border-radius:12px;background:var(--accent);color:#092014;font-weight:700;transition:filter .18s}.submit:hover:not(:disabled){filter:brightness(1.1)}.submit:disabled{opacity:.45;cursor:not-allowed}.notice{margin-top:14px;padding:12px;border-radius:10px;background:#3f1d2b;color:#fecdd3;overflow-wrap:anywhere}.notice.success{background:#123c2a;color:#bbf7d0}.notice a{color:inherit;display:flex;align-items:center;gap:7px}.notice svg{width:16px}.pool-directory{padding:56px 0 80px;scroll-margin-top:24px}.section-heading{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:28px}.section-heading h2,.swap-title h2{font-size:36px;margin:6px 0}.section-heading p{color:var(--muted);margin:0}.secondary-button,.empty-state button{min-height:44px;border:1px solid var(--line);border-radius:10px;background:#29354b;color:white;padding:0 16px;display:flex;align-items:center;gap:8px}.secondary-button svg{width:17px}.pool-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.pool-card{color:var(--text);text-decoration:none;background:#1b2336dc;border:1px solid #64748b70;border-radius:20px;padding:24px;transition:border-color .18s,transform .18s}.pool-card:hover{border-color:#86efac;transform:translateY(-2px)}.token-pair{display:flex;align-items:center;margin-bottom:24px}.token-pair span{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:#14532d;border:2px solid var(--card);font:600 13px "Fira Code"}.token-pair span+span{background:#1e3a8a;margin-left:-10px}.token-pair strong{margin-left:14px;font-family:"Fira Code";font-size:14px}.pool-card dl,.pool-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0}.pool-card dl div,.pool-facts div{min-width:0}.pool-card dt,.pool-facts dt{color:var(--muted);font-size:12px}.pool-card dd,.pool-facts dd{margin:3px 0;font-family:"Fira Code";font-size:13px;overflow-wrap:anywhere}.card-link{display:flex;align-items:center;gap:7px;color:#86efac;margin-top:22px;font-weight:600}.card-link svg{width:17px}.empty-state{min-height:180px;border:1px dashed var(--line);border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;padding:24px;color:var(--muted)}.empty-state strong{font-size:18px;color:white}.pool-skeleton{height:260px;border-radius:20px;background:linear-gradient(100deg,#1b2336 30%,#29354b 50%,#1b2336 70%);background-size:200% 100%;animation:shimmer 1.4s infinite}.pool-skeleton.tall{height:520px}.detail-shell{padding:56px 0 80px}.back-link{display:inline-flex;align-items:center;gap:8px;color:#bbf7d0;text-decoration:none;min-height:44px}.back-link svg{width:18px}.detail-grid{display:grid;grid-template-columns:minmax(0,1fr) 460px;gap:64px;align-items:start;margin-top:32px}.pool-summary h1{font-size:clamp(36px,5vw,64px);overflow-wrap:anywhere}.pool-summary>p:not(.eyebrow){color:#cbd5e1;font-size:18px}.reserve-list{display:grid;gap:14px;margin:36px 0}.reserve-list>div{padding:18px;border:1px solid #64748b70;border-radius:14px;background:#1b2336aa}.reserve-list span{display:block;color:var(--muted);font-size:13px}.reserve-list strong{display:block;font:600 28px "Fira Code";margin:5px 0}.reserve-list a{color:#bbf7d0;font:12px "Fira Code";display:flex;align-items:center;gap:6px;overflow-wrap:anywhere}.reserve-list svg{width:14px;min-width:14px}.pool-facts{border-top:1px solid #ffffff20;padding-top:20px}.swap-title{display:flex;align-items:center;justify-content:space-between}.swap-title p,.swap-title h2{margin-top:0}.asset-address{font:11px "Fira Code";color:var(--muted);overflow-wrap:anywhere;margin-top:6px}footer{border-top:1px solid #ffffff20;display:flex;justify-content:space-between;padding:28px 0;color:#94a3b8;font-size:13px}code{font-family:"Fira Code"}@keyframes shimmer{to{background-position:-200% 0}}@media(max-width:900px){.hero,.detail-grid{grid-template-columns:1fr;padding-top:48px}.trade-card{max-width:560px;width:100%;margin:auto}.detail-trade{margin:0}h1{font-size:56px}}@media(max-width:640px){main{padding:0 16px}header{height:auto;padding:16px 0;flex-wrap:wrap}.network,.header-link{display:none}.wallet-adapter-button{margin-left:auto}.hero{padding:36px 0;gap:40px}h1{font-size:44px}.lead{font-size:17px}.trade-card{padding:18px;border-radius:18px}.trade-card nav button{font-size:13px;padding:0 5px}.trust{gap:14px;margin-top:28px}.section-heading{align-items:start}.section-heading h2{font-size:30px}.pool-grid{grid-template-columns:1fr}.pool-card dl,.pool-facts{grid-template-columns:1fr 1fr}.detail-shell{padding-top:28px}.detail-grid{gap:36px;margin-top:20px}.pool-summary h1{font-size:36px}footer{flex-direction:column;gap:8px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Fira+Sans:wght@400;500;600;700&display=swap");
+.sub-tabs {
+  grid-template-columns: repeat(3, 1fr) !important;
+}
+.sub-tabs button {
+  padding: 0 8px !important;
+}
+.danger-note {
+  display: grid;
+  gap: 4px;
+  margin: 16px 0;
+  padding: 12px;
+  border: 1px solid #ef444477;
+  border-radius: 10px;
+  background: #3f1d2b;
+  color: #fecdd3;
+  font-size: 13px;
+}
+.danger-note strong {
+  color: #fff;
+}
+.cleanup-summary {
+  margin: 14px 0;
+  padding: 14px;
+  border: 1px solid #fca5a566;
+  border-radius: 10px;
+  background: #271923;
+}
+.cleanup-summary > strong {
+  color: #fecaca;
+}
+.cleanup-summary dl {
+  margin: 10px 0 0;
+}
+.cleanup-summary dl div {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 10px;
+  padding: 6px 0;
+  border-top: 1px solid #ffffff12;
+}
+.cleanup-summary dt {
+  color: var(--muted);
+}
+.cleanup-summary dd {
+  margin: 0;
+  font-family: "Fira Code";
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.submit.danger {
+  background: #ef4444;
+  color: white;
+}
+:root {
+  --bg: #0f172a;
+  --card: #1b2336;
+  --muted: #a9b7ca;
+  --line: #475569;
+  --accent: #22c55e;
+  --text: #f8fafc;
+  --danger: #fca5a5;
+}
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 20% 15%, #153b3a 0, transparent 32%),
+    radial-gradient(circle at 85% 85%, #273257 0, transparent 30%), var(--bg);
+  color: var(--text);
+  font:
+    16px/1.5 "Fira Sans",
+    sans-serif;
+  min-height: 100vh;
+}
+button,
+input {
+  font: inherit;
+}
+button {
+  cursor: pointer;
+}
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  outline: 3px solid white;
+  outline-offset: 3px;
+}
+main {
+  max-width: 1200px;
+  margin: auto;
+  min-height: 100vh;
+  padding: 0 32px;
+}
+header {
+  height: 88px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 1px solid #ffffff20;
+}
+.brand {
+  color: white;
+  text-decoration: none;
+  font: 700 20px "Fira Code";
+  letter-spacing: 0.05em;
+  margin-right: auto;
+}
+.brand span {
+  display: inline-grid;
+  place-items: center;
+  background: var(--accent);
+  color: #0f172a;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  margin-right: 8px;
+}
+.header-link {
+  color: #dbe4ef;
+  text-decoration: none;
+  min-height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0 10px;
+}
+.network {
+  font: 500 12px "Fira Code";
+  letter-spacing: 0.12em;
+  color: #cbd5e1;
+}
+.network i {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  margin-right: 8px;
+}
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 480px;
+  align-items: center;
+  gap: 72px;
+  padding: 72px 0;
+}
+.eyebrow {
+  color: #86efac;
+  font: 600 13px "Fira Code";
+  letter-spacing: 0.14em;
+}
+h1 {
+  font-size: clamp(48px, 7vw, 82px);
+  line-height: 1.03;
+  letter-spacing: -0.045em;
+  margin: 16px 0 24px;
+}
+h1 em {
+  font-style: normal;
+  color: var(--accent);
+}
+.lead {
+  max-width: 600px;
+  color: #cbd5e1;
+  font-size: 19px;
+}
+.trust {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-top: 40px;
+  color: #dbe4ef;
+  font-size: 14px;
+}
+.trust span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.trust svg {
+  width: 18px;
+  color: var(--accent);
+}
+.trade-card {
+  background: #1b2336e8;
+  border: 1px solid #64748b88;
+  box-shadow: 0 28px 80px #0008;
+  backdrop-filter: blur(18px);
+  border-radius: 24px;
+  padding: 24px;
+}
+.trade-card nav {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: #0f172a;
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 24px;
+}
+.trade-card nav button,
+.sub-tabs button {
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  color: #94a3b8;
+  border-radius: 9px;
+  font-weight: 600;
+}
+.trade-card nav button.active,
+.sub-tabs button.active {
+  background: #334155;
+  color: white;
+}
+.sub-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.sub-tabs button {
+  border: 1px solid var(--line);
+  padding: 0 10px;
+}
+.sub-tabs button.active {
+  border-color: #86efac;
+}
+label {
+  display: block;
+  color: #cbd5e1;
+  font-size: 13px;
+  margin: 14px 0 6px;
+}
+input {
+  display: block;
+  width: 100%;
+  margin-top: 7px;
+  height: 52px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #0f172a;
+  color: white;
+  padding: 0 14px;
+  font-family: "Fira Code";
+  font-size: 14px;
+}
+.helper {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 8px 2px 20px;
+}
+.flip,
+.icon-button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: #29354b;
+  color: white;
+}
+.flip {
+  margin: 12px auto -8px;
+}
+.flip:disabled,
+.icon-button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.flip svg,
+.icon-button svg {
+  width: 19px;
+}
+.details {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  border-top: 1px solid #ffffff20;
+  margin-top: 20px;
+  padding: 18px 2px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.details code {
+  color: #dbeafe;
+}
+.mint-result {
+  border-top: 1px solid #ffffff20;
+  margin-top: 20px;
+  padding: 18px 2px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.mint-result span {
+  display: block;
+  margin-bottom: 6px;
+}
+.mint-result a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #bbf7d0;
+  font-family: "Fira Code";
+  overflow-wrap: anywhere;
+}
+.mint-result svg {
+  width: 16px;
+  min-width: 16px;
+}
+.submit {
+  width: 100%;
+  min-height: 52px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #092014;
+  font-weight: 700;
+  transition: filter 0.18s;
+}
+.submit:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+.submit:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.notice {
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #3f1d2b;
+  color: #fecdd3;
+  overflow-wrap: anywhere;
+}
+.notice.success {
+  background: #123c2a;
+  color: #bbf7d0;
+}
+.notice a {
+  color: inherit;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.notice svg {
+  width: 16px;
+}
+.pool-directory {
+  padding: 56px 0 80px;
+  scroll-margin-top: 24px;
+}
+.section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+.section-heading h2,
+.swap-title h2 {
+  font-size: 36px;
+  margin: 6px 0;
+}
+.section-heading p {
+  color: var(--muted);
+  margin: 0;
+}
+.secondary-button,
+.empty-state button {
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #29354b;
+  color: white;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.secondary-button svg {
+  width: 17px;
+}
+.pool-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+.pool-card {
+  color: var(--text);
+  text-decoration: none;
+  background: #1b2336dc;
+  border: 1px solid #64748b70;
+  border-radius: 20px;
+  padding: 24px;
+  transition:
+    border-color 0.18s,
+    transform 0.18s;
+}
+.pool-card:hover {
+  border-color: #86efac;
+  transform: translateY(-2px);
+}
+.token-pair {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.token-pair span {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #14532d;
+  border: 2px solid var(--card);
+  font: 600 13px "Fira Code";
+}
+.token-pair span + span {
+  background: #1e3a8a;
+  margin-left: -10px;
+}
+.token-pair strong {
+  margin-left: 14px;
+  font-family: "Fira Code";
+  font-size: 14px;
+}
+.pool-card dl,
+.pool-facts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 0;
+}
+.pool-card dl div,
+.pool-facts div {
+  min-width: 0;
+}
+.pool-card dt,
+.pool-facts dt {
+  color: var(--muted);
+  font-size: 12px;
+}
+.pool-card dd,
+.pool-facts dd {
+  margin: 3px 0;
+  font-family: "Fira Code";
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.card-link {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #86efac;
+  margin-top: 22px;
+  font-weight: 600;
+}
+.card-link svg {
+  width: 17px;
+}
+.empty-state {
+  min-height: 180px;
+  border: 1px dashed var(--line);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  padding: 24px;
+  color: var(--muted);
+}
+.empty-state strong {
+  font-size: 18px;
+  color: white;
+}
+.pool-skeleton {
+  height: 260px;
+  border-radius: 20px;
+  background: linear-gradient(100deg, #1b2336 30%, #29354b 50%, #1b2336 70%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+.pool-skeleton.tall {
+  height: 520px;
+}
+.detail-shell {
+  padding: 56px 0 80px;
+}
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #bbf7d0;
+  text-decoration: none;
+  min-height: 44px;
+}
+.back-link svg {
+  width: 18px;
+}
+.detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 460px;
+  gap: 64px;
+  align-items: start;
+  margin-top: 32px;
+}
+.pool-summary h1 {
+  font-size: clamp(36px, 5vw, 64px);
+  overflow-wrap: anywhere;
+}
+.pool-summary > p:not(.eyebrow) {
+  color: #cbd5e1;
+  font-size: 18px;
+}
+.reserve-list {
+  display: grid;
+  gap: 14px;
+  margin: 36px 0;
+}
+.reserve-list > div {
+  padding: 18px;
+  border: 1px solid #64748b70;
+  border-radius: 14px;
+  background: #1b2336aa;
+}
+.reserve-list span {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
+}
+.reserve-list strong {
+  display: block;
+  font: 600 28px "Fira Code";
+  margin: 5px 0;
+}
+.reserve-list a {
+  color: #bbf7d0;
+  font: 12px "Fira Code";
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-wrap: anywhere;
+}
+.reserve-list svg {
+  width: 14px;
+  min-width: 14px;
+}
+.pool-facts {
+  border-top: 1px solid #ffffff20;
+  padding-top: 20px;
+}
+.swap-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.swap-title p,
+.swap-title h2 {
+  margin-top: 0;
+}
+.asset-address {
+  font: 11px "Fira Code";
+  color: var(--muted);
+  overflow-wrap: anywhere;
+  margin-top: 6px;
+}
+footer {
+  border-top: 1px solid #ffffff20;
+  display: flex;
+  justify-content: space-between;
+  padding: 28px 0;
+  color: #94a3b8;
+  font-size: 13px;
+}
+code {
+  font-family: "Fira Code";
+}
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+@media (max-width: 900px) {
+  .hero,
+  .detail-grid {
+    grid-template-columns: 1fr;
+    padding-top: 48px;
+  }
+  .trade-card {
+    max-width: 560px;
+    width: 100%;
+    margin: auto;
+  }
+  .detail-trade {
+    margin: 0;
+  }
+  h1 {
+    font-size: 56px;
+  }
+}
+@media (max-width: 640px) {
+  main {
+    padding: 0 16px;
+  }
+  header {
+    height: auto;
+    padding: 16px 0;
+    flex-wrap: wrap;
+  }
+  .network,
+  .header-link {
+    display: none;
+  }
+  .wallet-adapter-button {
+    margin-left: auto;
+  }
+  .hero {
+    padding: 36px 0;
+    gap: 40px;
+  }
+  h1 {
+    font-size: 44px;
+  }
+  .lead {
+    font-size: 17px;
+  }
+  .trade-card {
+    padding: 18px;
+    border-radius: 18px;
+  }
+  .trade-card nav button {
+    font-size: 13px;
+    padding: 0 5px;
+  }
+  .trust {
+    gap: 14px;
+    margin-top: 28px;
+  }
+  .section-heading {
+    align-items: start;
+  }
+  .section-heading h2 {
+    font-size: 30px;
+  }
+  .pool-grid {
+    grid-template-columns: 1fr;
+  }
+  .pool-card dl,
+  .pool-facts {
+    grid-template-columns: 1fr 1fr;
+  }
+  .detail-shell {
+    padding-top: 28px;
+  }
+  .detail-grid {
+    gap: 36px;
+    margin-top: 20px;
+  }
+  .pool-summary h1 {
+    font-size: 36px;
+  }
+  footer {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}

@@ -11,6 +11,7 @@ K-Swap 是部署在 Solana devnet 的恒定乘积（`x · y = k`）SPL Token AMM
 - 按实时储备报价并执行带滑点保护的 A→B / B→A swap。
 - 创建经典 SPL Token mint，可配置名称、Symbol、Metadata URI 和 0–9 位小数。
 - 向连接钱包的关联代币账户（ATA）增发测试 Token；ATA 不存在时自动创建。
+- 将钱包 ATA 的全部测试 Token 转入 Incinerator 黑洞 ATA，并关闭源 ATA、退回租金。
 - 所有页面交易在请求钱包签名前先进行 RPC 模拟，确认后提供 devnet Explorer 链接。
 
 当前演示范围不包含 Token-2022、LP Token 和后续增减流动性。一个 owner 钱包当前只能初始化一个 Pool。

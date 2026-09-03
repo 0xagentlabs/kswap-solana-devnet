@@ -6,4 +6,7 @@ program-keypair.json
 *.so
 .env*
 !.env.example
-
+.agent_context/
+.multica/
+AGENTS.md
+*.tsbuildinfo

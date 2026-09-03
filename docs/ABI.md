@@ -20,6 +20,18 @@ Program ID：`BsyakUNhxHsL1UdEbaUSHTRaLZ6fw2huHW34wHe7ut8c`，网络：Solana de
 
 账户依次为：user（signer、writable）、pool、user source（writable）、user destination（writable）、source vault（writable）、destination vault（writable）、SPL Token Program。vault 可按 A→B 或 B→A 顺序传入，必须与 Pool 记录匹配。输出计算为 `reserve_out × amount_in × (10000-fee) / (reserve_in×10000 + amount_in×(10000-fee))`。
 
+## 指令 2：AddLiquidity
+
+数据：`tag:u8=2 | amount_a:u64 | amount_b:u64`。两个数量均须大于零。
+
+账户依次为：owner（signer）、pool、owner Token A（writable）、owner Token B（writable）、vault A（writable）、vault B（writable）、SPL Token Program。调用者必须等于 Pool 持久化 owner；用户 Token 账户的 authority 必须为 owner，mint 和 vault 必须与 Pool 完全匹配。两侧资产通过 CPI 成对转入 vault。
+
+## 指令 3：RemoveLiquidity
+
+数据：`tag:u8=3 | amount_a:u64 | amount_b:u64`。两个数量均须大于零，且不得超过对应 vault 余额。
+
+账户顺序与 AddLiquidity 相同。调用者必须为 Pool owner；Program 使用 Pool PDA seeds 签署两次 SPL Token Transfer，将指定数量成对转回 owner 的 Token 账户。当前版本没有 LP Token，因此不允许其他钱包增减流动性。
+
 ## 错误码
 
 `1 InvalidAccounts`、`2 InvalidPda`、`3 InvalidState`、`4 InvalidMint`、`5 InvalidAmount`、`6 Slippage`、`7 MathOverflow`、`8 Unauthorized`、`9 InvalidFee`。

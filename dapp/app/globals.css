@@ -329,6 +329,16 @@ input {
   opacity: 0.45;
   cursor: not-allowed;
 }
+.action-tabs,
+.quick-amounts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.action-tabs { margin-bottom: 20px; }
+.action-tabs button,
+.quick-amounts button { min-height: 44px; border: 1px solid var(--line); border-radius: 10px; background: #0f172a; color: #cbd5e1; }
+.action-tabs button.active { border-color: #86efac; background: #334155; color: white; }
+.quick-amounts { margin: 8px 0 14px; }
+.quick-amounts button:disabled { opacity: .4; cursor: not-allowed; }
+.balance { float: right; color: #86efac; font-family: "Fira Code"; }
+.owner-note { color: var(--muted); font-size: 13px; padding: 10px 12px; border: 1px solid #ffffff20; border-radius: 10px; }
 .notice {
   margin-top: 14px;
   padding: 12px;
@@ -356,7 +366,7 @@ input {
 }
 .section-heading {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 24px;
   margin-bottom: 28px;

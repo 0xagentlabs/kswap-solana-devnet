@@ -55,8 +55,132 @@ fn process_instruction(
     match tag {
         0 => initialize(accounts, args),
         1 => swap(accounts, args),
+        2 => add_liquidity(accounts, args),
+        3 => remove_liquidity(accounts, args),
         _ => Err(ProgramError::InvalidInstructionData),
     }
+}
+
+// Accounts: owner(s), pool, owner A(w), owner B(w), vault A(w), vault B(w), token program.
+// Data: tag | amount_a:u64 | amount_b:u64.
+fn add_liquidity(a: &[AccountInfo], d: &[u8]) -> ProgramResult {
+    let (owner, pool, ua, ub, va, vb, amount_a, amount_b) = liquidity_accounts(a, d)?;
+    let user_a = TokenAccount::from_account_info(ua)?;
+    let user_b = TokenAccount::from_account_info(ub)?;
+    validate_liquidity_accounts(owner, pool, &user_a, &user_b, va, vb)?;
+    Transfer {
+        from: ua,
+        to: va,
+        authority: owner,
+        amount: amount_a,
+    }
+    .invoke()?;
+    Transfer {
+        from: ub,
+        to: vb,
+        authority: owner,
+        amount: amount_b,
+    }
+    .invoke()
+}
+
+fn remove_liquidity(a: &[AccountInfo], d: &[u8]) -> ProgramResult {
+    let (owner, pool, ua, ub, va, vb, amount_a, amount_b) = liquidity_accounts(a, d)?;
+    let user_a = TokenAccount::from_account_info(ua)?;
+    let user_b = TokenAccount::from_account_info(ub)?;
+    validate_liquidity_accounts(owner, pool, &user_a, &user_b, va, vb)?;
+    let pd = pool.try_borrow_data()?;
+    let bump_bytes = [pd[1]];
+    let seeds = [
+        Seed::from(b"pool"),
+        Seed::from(owner.key().as_ref()),
+        Seed::from(&bump_bytes),
+    ];
+    let signer = Signer::from(&seeds);
+    Transfer {
+        from: va,
+        to: ua,
+        authority: pool,
+        amount: amount_a,
+    }
+    .invoke_signed(&[signer])?;
+    Transfer {
+        from: vb,
+        to: ub,
+        authority: pool,
+        amount: amount_b,
+    }
+    .invoke_signed(&[Signer::from(&seeds)])
+}
+
+type LiquidityInput<'a> = (
+    &'a AccountInfo,
+    &'a AccountInfo,
+    &'a AccountInfo,
+    &'a AccountInfo,
+    &'a AccountInfo,
+    &'a AccountInfo,
+    u64,
+    u64,
+);
+
+fn liquidity_accounts<'a>(
+    a: &'a [AccountInfo],
+    d: &[u8],
+) -> Result<LiquidityInput<'a>, ProgramError> {
+    if a.len() != 7 || d.len() != 16 {
+        return Err(SwapError::InvalidAccounts.into());
+    }
+    let (owner, pool, ua, ub, va, vb, tp) = (&a[0], &a[1], &a[2], &a[3], &a[4], &a[5], &a[6]);
+    if !owner.is_signer()
+        || !ua.is_writable()
+        || !ub.is_writable()
+        || !va.is_writable()
+        || !vb.is_writable()
+        || pool.owner() != &ID
+        || tp.key() != &pinocchio_token::ID
+        || ua.key() == ub.key()
+        || va.key() == vb.key()
+    {
+        return Err(SwapError::InvalidAccounts.into());
+    }
+    let amount_a = u64::from_le_bytes(d[0..8].try_into().unwrap());
+    let amount_b = u64::from_le_bytes(d[8..16].try_into().unwrap());
+    if amount_a == 0 || amount_b == 0 {
+        return Err(SwapError::InvalidAmount.into());
+    }
+    Ok((owner, pool, ua, ub, va, vb, amount_a, amount_b))
+}
+
+fn validate_liquidity_accounts(
+    owner: &AccountInfo,
+    pool: &AccountInfo,
+    ua: &TokenAccount,
+    ub: &TokenAccount,
+    va: &AccountInfo,
+    vb: &AccountInfo,
+) -> ProgramResult {
+    let pd = pool.try_borrow_data()?;
+    if pd.len() != POOL_LEN || pd[0] != DISC {
+        return Err(SwapError::InvalidState.into());
+    }
+    if owner.key() != <&[u8; 32]>::try_from(&pd[4..36]).unwrap() {
+        return Err(SwapError::Unauthorized.into());
+    }
+    let vault_a = TokenAccount::from_account_info(va)?;
+    let vault_b = TokenAccount::from_account_info(vb)?;
+    if va.key() != <&[u8; 32]>::try_from(&pd[100..132]).unwrap()
+        || vb.key() != <&[u8; 32]>::try_from(&pd[132..164]).unwrap()
+        || ua.owner() != owner.key()
+        || ub.owner() != owner.key()
+        || ua.mint() != vault_a.mint()
+        || ub.mint() != vault_b.mint()
+        || vault_a.owner() != pool.key()
+        || vault_b.owner() != pool.key()
+    {
+        return Err(SwapError::InvalidMint.into());
+    }
+    Ok(())
 }
 
 // Pool: disc(1), bump(1), fee_bps(2), owner(32), mint_a(32), mint_b(32), vault_a(32), vault_b(32).
